@@ -159,26 +159,39 @@ create me docker compose with this app and add also a postgresql db, connect the
 ```
 
 **Výsledok:**
-
-**Úpravy:**
-
-
-
-**Poznámky:**
+✅ Fungoval perfektne (first try)
 
 ### Prompt #5: _________________________________
 
-**Nástroj:** _________________  
-**Kontext:** _________________
+**Nástroj:** Claude Code
+
+**Kontext:** Oprava chyboveho stavu 403 namiesto 401
 
 **Prompt:**
 ```
-add proper swagger with documentaed error codes: 
-Correctly handle error return states
-400 Bad Request
-401 Unauthorized
-404 Not Found
-500 Internal Server Error
+when i am not authorized, and i call the api, i get 403 and o should get 401, based on my assignemtent
+```
+
+**Výsledok:**
+✅ Fungoval perfektne (first try)
+
+**Úpravy:**
+V prvom prompte som sice poziadal o 401 Unauthorized, ale AI nastavila 403 Forbidden. Tento prompt to opravil.
+
+
+**Poznámky:**
+Neuvedomil som si tento detail hned na zaciatku, a explicitne som na to neupozornil.
+
+---
+
+### Prompt #6: _________________________________
+
+**Nástroj:** Claude Code
+
+**Kontext:** Oprava chyboveho stavu 403 namiesto 401
+
+**Prompt:**
+```
 ```
 
 **Výsledok:**
@@ -186,9 +199,7 @@ Correctly handle error return states
 **Úpravy:**
 
 
-
 **Poznámky:**
-
 
 ---
 
