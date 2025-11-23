@@ -253,6 +253,7 @@ i already have some things in db, change the id for next_uuid() or
 ```
 
 **Výsledok:**
+
 ✅ Fungoval perfektne (first try)
 
 _________________________________
@@ -272,6 +273,39 @@ Použil som vbudovaný nástroj GitHub Copilot v VSCode na vygenerovanie commit 
 ✅ Fungoval perfektne (first try)
 
 ---
+
+### Prompt #10:
+
+**Nástroj:** Github copilot
+
+**Kontext:** Priprava na PRP
+
+**Prompt:**
+```
+/init
+```
+
+**Výsledok:**
+
+✅ Fungoval perfektne (first try)
+
+---
+
+### Prompt #11:
+
+**Nástroj:** Github copilot
+
+**Kontext:** 
+
+**Prompt:**
+```
+
+```
+
+**Výsledok:**
+
+---
+
 ## 3. Problémy a Riešenia 
 
 > 💡 **Tip:** Problémy sú cenné! Ukazujú ako riešiš problémy s AI.
