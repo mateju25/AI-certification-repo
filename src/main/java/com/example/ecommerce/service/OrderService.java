@@ -27,6 +27,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final OrderEventPublisher orderEventPublisher;
 
     @Transactional
     public OrderResponseDTO createOrder(OrderRequestDTO requestDTO) {
@@ -50,6 +51,7 @@ public class OrderService {
         }
 
         Order savedOrder = orderRepository.save(order);
+        orderEventPublisher.publishOrderCreated(savedOrder);
         return mapToResponseDTO(savedOrder);
     }
 

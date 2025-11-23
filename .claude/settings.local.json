@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(mvn clean compile:*)",
-      "Bash(mvn clean test:*)"
+      "Bash(mvn clean test:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker ps:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(mvn test:*)",
+      "Bash(Select-String -Pattern \"Tests run:|BUILD|testOrder\")"
     ],
     "deny": [],
     "ask": []
