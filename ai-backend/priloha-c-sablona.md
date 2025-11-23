@@ -222,22 +222,56 @@ _________________________________
 
 **Nástroj:** Claude Code
 
-**Kontext:** 
+**Kontext:** Integracne testy pre vsetky endpointy
 
 **Prompt:**
 ```
-
+now create me 7 integration tests together for all endpoints, prioritize creating entities, login, make one to test
+  authorization fail, ...
 ```
 
 **Výsledok:**
-
+⭐⭐⭐⭐ Dobré, potreboval malé úpravy
 
 **Úpravy:**
+Vytvoril si skript na data, ale dal tam pevne idcka, co sposobilo chyby pri behu testov. Povedal som mu nech pouzije automaticke generovanie idciek pomocou next_uuid() alebo hibernate sekvencie, aby sa predišlo konfliktom s existujucimi datami v db.
 
 **Poznámky:**
 
----
+_________________________________
 
+### Prompt #8:
+
+**Nástroj:** Claude Code
+
+**Kontext:** Oprava idčiek v integračných testoch
+
+**Prompt:**
+```
+i already have some things in db, change the id for next_uuid() or
+      next(hibernate sequence) or something
+```
+
+**Výsledok:**
+✅ Fungoval perfektne (first try)
+
+_________________________________
+
+### Prompt #9:
+
+**Nástroj:** Github copilot
+
+**Kontext:** Vygenerovanie commit message pre git
+
+**Prompt:**
+
+Použil som vbudovaný nástroj GitHub Copilot v VSCode na vygenerovanie commit message pre git.
+
+**Výsledok:**
+
+✅ Fungoval perfektne (first try)
+
+---
 ## 3. Problémy a Riešenia 
 
 > 💡 **Tip:** Problémy sú cenné! Ukazujú ako riešiš problémy s AI.
