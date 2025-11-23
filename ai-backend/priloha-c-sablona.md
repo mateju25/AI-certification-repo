@@ -368,7 +368,7 @@ Properly read README.md, CLUADE.md and API_DOCUMENTATION.md
 
 **Prompt:**
 ```
-/execute-prp PRPs/kafka-integration.md
+/execute-prp PRPs/kafka-event-driven-orders.md
 ```
 
 **Výsledok:**
