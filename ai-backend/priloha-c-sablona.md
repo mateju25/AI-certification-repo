@@ -14,7 +14,7 @@
 
 Vyplň približný čas strávený s každým nástrojom:
 
-- [x] **Claude Code:** 2 hodín  
+- [x] **Claude Code:** 3 hodín  
 - [x] **GitHub Copilot:** _____ hodín
 - [x] **Claude.ai:** _____ hodín
 
@@ -30,7 +30,7 @@ Vyplň približný čas strávený s každým nástrojom:
 
 ## 2. Zbierka Promptov
 
-### Prompt #1: _________________________________
+### Prompt #1: 
 
 **Nástroj:** Claude Code 
 
@@ -97,7 +97,9 @@ Taktiez som pridal Swagger dokumentaciu a spravne osetrenie chybovych stavov.
 
 Nezadefinoval som verziu kniznice io.jsonwebtoken v prompte, co sposobilo ze AI pouzila starsiu verziu s deprecated metodami. V buducnosti budem vzdy specifikovat verzie kniznic v prompte.
 
-### Prompt #2: _________________________________
+---
+
+### Prompt #2: 
 **Nástroj:** Claude Code
 
 **Kontext:** Oprava deprecated metód v JWT generovaní
@@ -115,7 +117,9 @@ signWith(java.security.Key,io.jsonwebtoken.SignatureAlgorithm) in io.jsonwebtoke
 ```
 ✅ Fungoval perfektne (first try)
 
-### Prompt #3: _________________________________
+---
+
+### Prompt #3: 
 
 **Nástroj:** Claude Code
 
@@ -132,7 +136,7 @@ Correctly handle error return states
 ```
 
 **Výsledok:**
-✅ Fungoval perfektne (first try)  
+❌ Nefungoval, musel som celé prepísať
 
 **Úpravy:**
 
@@ -144,9 +148,11 @@ Swagger dokumentacia bola slaba a chybove stavy neboli spravne osetrene. Pomocou
 **Poznámky:**
 
 
-Cakal som ze to spravi poriadne hned pri prvom prompte, ale nespravil tak, tento prompt to ale fixol.
+Cakal som ze to spravi poriadne hned pri prvom prompte, ale nespravil tak, tento prompt to tiez nefixol. Skusim este raz.
 
-### Prompt #4: _________________________________
+---
+
+### Prompt #4: 
 
 **Nástroj:** Claude Code
 
@@ -161,7 +167,9 @@ create me docker compose with this app and add also a postgresql db, connect the
 **Výsledok:**
 ✅ Fungoval perfektne (first try)
 
-### Prompt #5: _________________________________
+---
+
+### Prompt #5: 
 
 **Nástroj:** Claude Code
 
@@ -184,20 +192,47 @@ Neuvedomil som si tento detail hned na zaciatku, a explicitne som na to neupozor
 
 ---
 
-### Prompt #6: _________________________________
+### Prompt #6:
 
 **Nástroj:** Claude Code
 
-**Kontext:** Oprava chyboveho stavu 403 namiesto 401
+**Kontext:** Oprava swagger definícií a chybových stavov
 
 **Prompt:**
 ```
+please remove all swagger definitions and start again over, because you are returning the same error dto and you do
+  not consider the right status codes, so now, create a swagger definitions so that it makes sense, when returinn 500
+  for exmaple do not return bad reguest dto. Also when returnin 401, 404 or 500 return only a body that consist of one
+  message which will be error. When retunrnin 400, also add validation errors (but they need to be different
+  according to each endpoint)
+```
+
+**Výsledok:**
+✅ Fungoval perfektne (first try)
+
+**Úpravy:**
+Prompt 3 spravil uplne hovadiny, tak som to musel cele spravit nanovo. Tentokrat som presne specifikoval ake dto sa ma vracat pri jednotlivych statusoch. Taktiez som poziadal o validacne chyby specificke pre kazdy endpoint.
+
+**Poznámky:**
+S odpovedou som uz viac spokojny. Este by sa dali zlepsit examples v swaggeri, ale to uz necham tak.
+
+_________________________________
+
+### Prompt #7: 
+
+**Nástroj:** Claude Code
+
+**Kontext:** 
+
+**Prompt:**
+```
+
 ```
 
 **Výsledok:**
 
-**Úpravy:**
 
+**Úpravy:**
 
 **Poznámky:**
 

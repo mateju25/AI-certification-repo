@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.ErrorResponseDTO;
+import com.example.ecommerce.dto.ErrorMessageDTO;
+import com.example.ecommerce.dto.ValidationErrorDTO;
 import com.example.ecommerce.dto.order.OrderRequestDTO;
 import com.example.ecommerce.dto.order.OrderResponseDTO;
 import com.example.ecommerce.dto.order.OrderUpdateDTO;
@@ -42,23 +43,23 @@ public class OrderController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input data or validation error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - User or Product not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "User or product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<OrderResponseDTO> createOrder(@Valid @RequestBody OrderRequestDTO requestDTO) {
@@ -79,18 +80,18 @@ public class OrderController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - Order not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Order not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Long id) {
@@ -111,13 +112,13 @@ public class OrderController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders() {
@@ -138,18 +139,18 @@ public class OrderController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<List<OrderResponseDTO>> getOrdersByUserId(@PathVariable Long userId) {
@@ -170,23 +171,23 @@ public class OrderController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input data or validation error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - Order or Product not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Order or product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<OrderResponseDTO> updateOrder(
@@ -208,18 +209,18 @@ public class OrderController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - Order not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Order not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {

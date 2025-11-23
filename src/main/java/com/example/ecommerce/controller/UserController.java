@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.ErrorResponseDTO;
+import com.example.ecommerce.dto.ErrorMessageDTO;
+import com.example.ecommerce.dto.ValidationErrorDTO;
 import com.example.ecommerce.dto.user.UserRequestDTO;
 import com.example.ecommerce.dto.user.UserResponseDTO;
 import com.example.ecommerce.dto.user.UserUpdateDTO;
@@ -42,18 +43,18 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input or email already exists",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed or email already exists",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO requestDTO) {
@@ -74,18 +75,18 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
@@ -106,13 +107,13 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
@@ -133,23 +134,23 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input or email already exists",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed or email already exists",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<UserResponseDTO> updateUser(
@@ -171,18 +172,18 @@ public class UserController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - User not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {

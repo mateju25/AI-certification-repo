@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.ErrorResponseDTO;
+import com.example.ecommerce.dto.ErrorMessageDTO;
+import com.example.ecommerce.dto.ValidationErrorDTO;
 import com.example.ecommerce.dto.auth.LoginRequestDTO;
 import com.example.ecommerce.dto.auth.LoginResponseDTO;
 import com.example.ecommerce.service.AuthenticationService;
@@ -39,18 +40,18 @@ public class AuthenticationController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input data",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid credentials",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Invalid credentials",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequest) {

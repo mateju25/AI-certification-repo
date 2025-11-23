@@ -1,6 +1,6 @@
 package com.example.ecommerce.security;
 
-import com.example.ecommerce.dto.ErrorResponseDTO;
+import com.example.ecommerce.dto.ErrorMessageDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +12,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -24,12 +23,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
 
-        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
-                HttpStatus.UNAUTHORIZED.value(),
-                "Unauthorized",
-                "Authentication is required to access this resource",
-                LocalDateTime.now()
-        );
+        ErrorMessageDTO errorResponse = new ErrorMessageDTO("Authentication is required to access this resource");
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

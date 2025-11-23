@@ -1,6 +1,7 @@
 package com.example.ecommerce.controller;
 
-import com.example.ecommerce.dto.ErrorResponseDTO;
+import com.example.ecommerce.dto.ErrorMessageDTO;
+import com.example.ecommerce.dto.ValidationErrorDTO;
 import com.example.ecommerce.dto.product.ProductRequestDTO;
 import com.example.ecommerce.dto.product.ProductResponseDTO;
 import com.example.ecommerce.dto.product.ProductUpdateDTO;
@@ -42,18 +43,18 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input data",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
@@ -74,18 +75,18 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - Product not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
@@ -106,13 +107,13 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
@@ -133,23 +134,23 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Bad Request - Invalid input data",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Validation failed",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorDTO.class))
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - Product not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<ProductResponseDTO> updateProduct(
@@ -171,18 +172,18 @@ public class ProductController {
             ),
             @ApiResponse(
                     responseCode = "401",
-                    description = "Unauthorized - Invalid or missing JWT token",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Authentication required",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Not Found - Product not found",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "Internal Server Error",
-                    content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class))
+                    description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorMessageDTO.class))
             )
     })
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
