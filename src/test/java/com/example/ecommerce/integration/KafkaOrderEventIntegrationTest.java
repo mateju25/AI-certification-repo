@@ -190,7 +190,7 @@ class KafkaOrderEventIntegrationTest {
             createdOrderIds.add(orderResponse.getId());
 
             // Small delay between orders
-            Thread.sleep(100);
+            Thread.sleep(5000);
         }
 
         // Wait for all orders to be processed (5 seconds payment simulation + buffer)
@@ -286,13 +286,7 @@ class KafkaOrderEventIntegrationTest {
             return;
         }
 
-        // Manually set updatedAt to 11 minutes ago to simulate old order
-        order.setUpdatedAt(LocalDateTime.now().minusMinutes(11));
-        orderRepository.save(order);
-
-        // Wait for scheduler to run (scheduler runs every 60 seconds, but we'll wait 65s to be safe)
-        // For testing purposes, this is a long wait - in production you might reduce the interval
-        Thread.sleep(65000);
+        Thread.sleep(700000);
 
         // Verify order is expired
         Order expiredOrder = orderRepository.findById(orderId).orElseThrow();

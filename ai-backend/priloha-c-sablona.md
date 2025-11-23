@@ -4,7 +4,7 @@
 
 **Dátum začiatku:** 22.11.2025
 
-**Dátum dokončenia:** 
+**Dátum dokončenia:** 23.11.2025
 
 **Zadanie:** Backend
 
@@ -14,16 +14,10 @@
 
 Vyplň približný čas strávený s každým nástrojom:
 
-- [x] **Claude Code:** 6 hodín  
-- [x] **GitHub Copilot:** 0.2 hodín
+- [x] **Claude Code:** 8 hodín  
+- [x] **GitHub Copilot:** 0.4 hodín
 
-**Celkový čas vývoja (priližne):** _____ hodín
-
-[ ] ✅ Fungoval perfektne (first try)  
-[ ] ⭐⭐⭐⭐ Dobré, potreboval malé úpravy  
-[ ] ⭐⭐⭐ OK, potreboval viac úprav  
-[ ] ⭐⭐ Slabé, musel som veľa prepísať  
-[ ] ❌ Nefungoval, musel som celé prepísať
+**Celkový čas vývoja (priližne):** 8.5 hodín
 
 ---
 
@@ -439,7 +433,6 @@ Skusil som github copilota.
 
 ---
 
-
 ### Prompt #14:
 
 **Nástroj:** Github copilot
@@ -448,147 +441,139 @@ Skusil som github copilota.
 
 **Prompt:**
 ```
-when i try to open zookepper it gives me this error: ecommerce-zookeeper  | java.io.IOException: Len error. A message from /172.22.0.1:48302 with advertised length of 1195725856 is either a malformed message or too large to process (length is greater than jute.maxbuffer=1048575)
+ What is zookeper used for...
 ```
 
 **Výsledok:**
 
-❌ Nefungoval, musel som celé prepísať
-
-**Úpravy:**
-
-Spravil nejaky novy parameter, chyba nezmizla.
+✅ Fungoval perfektne (first try)
 
 **Poznámky:**
 
-Skusil som github copilota.
+Myslel som ze zookeper je nejaky gui nastroj na zobrazenie dat v kafka, ale je to nieco ine. :) Tym padom vsetko ide, iba testy zatial nie.
 
 ---
+
 ## 3. Problémy a Riešenia 
 
-> 💡 **Tip:** Problémy sú cenné! Ukazujú ako riešiš problémy s AI.
-
-### Problém #1: _________________________________
+### Problém #1: Deprecated metódy v JWT generovaní
 
 **Čo sa stalo:**
-```
-[Detailný popis problému - čo nefungovalo? Aká bola chyba?]
-```
+
+Claude Code vygeneroval kód na generovanie JWT tokenu pomocou zastaralých metód, ktoré už nie sú podporované v najnovšej verzii knižnice io.jsonwebtoken. Konkrétne použil metódu parserBuilder(), ktorá bola odstránená.
 
 **Prečo to vzniklo:**
-```
-[Tvoja analýza - prečo AI toto vygeneroval? Čo bolo v prompte zlé?]
-```
+
+Nezadefinoval som verziu knižnice io.jsonwebtoken v prompte, čo spôsobilo, že AI použila staršiu verziu s deprecated metódami.
 
 **Ako som to vyriešil:**
-```
-[Krok za krokom - čo si urobil? Upravil prompt? Prepísal kód? Použil iný nástroj?]
-```
+
+Napisal som ďalší prompt, v ktorom som požiadal o opravu kódu tak, aby používal aktuálne metódy podľa najnovšej dokumentácie knižnice. Claude Code následne vygeneroval opravený kód, ktorý už neobsahoval deprecated metódy.
 
 **Čo som sa naučil:**
-```
-[Konkrétny learning pre budúcnosť - čo budeš robiť inak?]
-```
 
-**Screenshot / Kód:** [ ] Priložený
+Treba vždy špecifikovať verzie knižníc v prompte, aby sa predišlo použitiu zastaralých alebo nekompatibilných metód.
 
 ---
 
-### Problém #2: _________________________________
+### Problém #2: Slaba swagger dokumentácia a chybové stavy
 
 **Čo sa stalo:**
-```
-```
 
-**Prečo:**
-```
-```
+Claude Code vygeneroval Swagger dokumentáciu a chybové stavy, ktoré neboli správne ošetrené a dokumentované. Chybové stavy neboli konzistentné s požiadavkami a dokumentácia bola nedostatočná.
 
-**Riešenie:**
-```
-```
+**Prečo to vzniklo:**
 
-**Learning:**
-```
-```
+AI nepochopila presne moje požiadavky na chybové stavy a spôsob dokumentácie v Swaggeri. Pravdepodobne som nebol dostatočne konkrétny v pôvodnom prompte a nezdoraznil som všetky detaily.
+
+**Ako som to vyriešil:**
+
+Dalsimi dvoma promptami som požiadal o odstránenie existujúcich Swagger definícií a ich opätovné vytvorenie s dôrazom na správne chybové stavy a špecifické DTO pre každý stav. Taktiež som požiadal o validácie špecifické pre každý endpoint.
+
+**Čo som sa naučil:**
+
+Je dôležité byť veľmi konkrétny a detailný v promptoch, najmä pri požiadavkách na dokumentáciu a chybové stavy. Niekedy je potrebné iterovať a opraviť generovaný kód viackrát, aby sa dosiahla požadovaná kvalita. Asi som bol len príliš naročný na kvalitu.
+
+---
+
+### Problém #3: Testy k druhej časti Kafka integrácie nefungovali
+
+**Čo sa stalo:**
+
+Claude code ma sice v PRP informoval, ze tam mozu byt chyby v dosledku async veci a nahodnom spravani statu objednavok, ale testy nefungovali spravne a ja som nevedel preco.
+Problem bol ale v tom, ze testy bezali na H2 databaze, ale v docker compose som mal nastavenu Postgresql databazu pre aplikaciu. Testy preto nevideli spravne data.
+
+**Prečo to vzniklo:**
+
+Na toto by ai asi neprisla, asi 20 minut skusal rozne veci, ale nakoniec som to vyriesil sam.
+
+**Ako som to vyriešil:**
+
+Pozrel som sa na kod a hned ma napadlo ze to moze byt databazou. Upravil som konfiguraciu testov aby pouzivali postgresql databazu v docker compose. A testy az na dve prebehli.
+U tych dvoch som musel upravit casovanie, pretoze nedostatocne dlho cakal a test nevysiel. Po uprave casov testy prebehli.
+
+**Čo som sa naučil:**
+
+AI zatial nevie vyriesit vsetky problemy, hlavne tie suvisiace s konfiguraciou a prostredim. Uz sa mi to stalo par krat aj v praxi. Co ale dokaze vyborne je napisat kde a co hladat.
+Mozno by to AI zvladlo, ale trvalo by to velmi dlho. (Pravdepodobne by to aj dost stalo).
 
 ## 4. Kľúčové Poznatky
 
 ### 4.1 Čo fungovalo výborne
 
 **1.** 
-```
-[Príklad: Claude Code pre OAuth - fungoval first try, zero problémov]
-```
+Claude code vygeneroval REST API s CRUD a JWT autentifikaciou na prvý pokus a bol som prekvapeny ako dobre to spravil a hlavne rychlo.
 
 **2.** 
-```
-```
+Taktiez napojenie na postgresql databazu a vytvorenie docker compose s db a seedrom pre admin usera bolo bez problemov.
 
 **3.** 
-```
-```
+Testy pre prvu cast generoval velmi kvalitne a hned zbehli.
 
-**[ Pridaj viac ak chceš ]**
+**4.**
+Integracia Kafka a generovanie PRP bolo velmi kvalitne a podrobne.
+
+**5.**
+Dokonca aj generovanie commit message pomocou github copilota fungovalo bez problemov.
+
+**6.**
+Vygenerovanie druhej casti, co sa tyka kodu ako takeho tak bez chyby akurat ja som nerozumel casti systemu ako ma fungovat. Po rucnom otestovani, vsetko OK.
 
 ---
 
 ### 4.2 Čo bolo náročné
 
 **1.** 
-```
-[Príklad: Figma MCP spacing - často o 4-8px vedľa, musel som manuálne opravovať]
-```
+Presvedcit AI ako ma vyzerat Swagger dokumentacia a chybove stavy. Trvalo to viacerymi iteraciami.
 
 **2.** 
-```
-```
-
-**3.** 
-```
-```
-
----
+Co som si vsimol tak niekedy je tazke zastavit claude code a stale sa ma pytal na dalsie veci, aj ked som mu povedal ze uz nic viac nepotrebujem.
+Copilot taky nie je a ked dam stop tak prestane.
 
 ### 4.3 Best Practices ktoré som objavil
 
 **1.** 
-```
-[Príklad: Vždy špecifikuj verziu knižnice v prompte - "NextAuth.js v5"]
-```
+Treba byt konkretny vo verziach kniznic, pretoze AI rado spadne do starsej verzie kde su deprecated metody.
 
 **2.** 
-```
-```
+Vyuzivat viacej PRP pre komplexnejsie veci, lebo AI vie velmi dobre vygenerovat kvalitny plan a potom ho aj vykonat.
 
 **3.** 
-```
-```
-
-**4.** 
-```
-```
-
-**5.** 
-```
-```
+Urcite ale urcite viacej rozdelovat zadanie do mensich casti, lebo AI ma problem s udrzanim kontextu pri vacsich zadaniach. 
+To som si vsimol aj tym ze uz dlhsie robim s AI a pri velkych ulohach zacne halucinovat.
 
 ---
 
 ### 4.4 Moje Top 3 Tipy Pre Ostatných
 
 **Tip #1:**
-```
-[Konkrétny, actionable tip]
-```
+Pouzivaj PRP pre komplexnejsie veci.
 
 **Tip #2:**
-```
-```
+Rozdeluj velke ulohy do mensich casti.
 
 **Tip #3:**
-```
-```
+Po kazdej feature cisti kontext.
 
 ---
 
@@ -596,47 +581,39 @@ Skusil som github copilota.
 
 ### 6.1 Efektivita AI nástrojov
 
-**Ktorý nástroj bol najužitočnejší?** _________________________________
+**Ktorý nástroj bol najužitočnejší?** Claude Code
 
 **Prečo?**
-```
-```
 
-**Ktorý nástroj bol najmenej užitočný?** _________________________________
+Github copilot pouzivam uz nejaky ten mesiac tak to viem porovnat. Claude code vie lepsie a lahsie ziskat kontext. Copilot ma s tymto problem, a je zdlhavejsie a tazsie mi ten context dat.
+
+**Ktorý nástroj bol najmenej užitočný?** Chat GPT
 
 **Prečo?**
-```
-```
+
+Opat problem s kontextom a neni tam ta integracia na IDE.
 
 ---
 
 ### 6.2 Najväčšie prekvapenie
-```
-[Čo ťa najviac prekvapilo pri práci s AI?]
-```
+Ze vie pekne pri malom prompte vygenerovat kvalitny plan a potom ho aj vykonat.
 
 ---
 
 ### 6.3 Najväčšia frustrácia
-```
-[Čo bolo najfrustrujúcejšie?]
-```
+Ked su nejake konfiguracne problemy alebo network issues, AI si s tym nevie rady a skusa do hlupa.
 
 ---
 
 ### 6.4 Najväčší "AHA!" moment
-```
-[Kedy ti došlo niečo dôležité o AI alebo o developmente?]
-```
+Je lepsie kvalitnejsie specifikovat prompt a mat viac mensich promptov ako jeden velky. Doteraz som vzdy robil kratke prompty a nie vzdy som dostal co som chcel. Lepsie bolo vzdy pockat.
 
 ---
 
 ### 6.5 Čo by som urobil inak
-```
-[Keby si začínal znova, čo by si zmenil?]
-```
+Urcite by som viacej rozpisal verziu kniznic a presnejsie specifikoval detaily ohladom implementacie.
+
+---
 
 ### 6.6 Hlavný odkaz pre ostatných
-```
-[Keby si mal povedať jednu vec kolegom o AI development, čo by to bylo?]
-```
+Lepsie je napisat velky kvalitny prompt a pockat dlhsie ako pisat kratke prompty vela razy.
