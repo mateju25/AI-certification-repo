@@ -8,6 +8,10 @@ A comprehensive Spring Boot REST API for an e-commerce application with JWT auth
 - JWT-based authentication and authorization
 - Product management
 - Order management with order items
+- **Event-driven architecture with Apache Kafka**
+- **Asynchronous order processing with payment simulation**
+- **Automated order expiration for stale orders**
+- **Real-time notifications system**
 - Input validation with detailed error messages
 - Comprehensive error handling (400, 401, 404, 500)
 - **Complete OpenAPI/Swagger documentation with error codes**
@@ -24,9 +28,12 @@ A comprehensive Spring Boot REST API for an e-commerce application with JWT auth
 - Hibernate
 - H2 Database (development)
 - PostgreSQL (production-ready)
+- Apache Kafka for event-driven architecture
+- Spring for Apache Kafka
 - Lombok
 - Maven
 - SpringDoc OpenAPI 3
+- Docker & Docker Compose
 
 ## Project Structure
 
@@ -388,7 +395,210 @@ spring.datasource.url=jdbc:h2:mem:ecommerce
 # JWT
 jwt.secret=your-secret-key
 jwt.expiration=86400000
+
+# Kafka
+spring.kafka.bootstrap-servers=localhost:29092
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=org.springframework.kafka.support.serializer.JsonSerializer
+spring.kafka.consumer.group-id=order-service-group
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
 ```
+
+## Event-Driven Architecture with Kafka
+
+This application uses **Apache Kafka** for asynchronous, event-driven order processing. The Kafka integration enables decoupled, scalable, and reliable order management with automated payment processing and expiration handling.
+
+### Overview
+
+The event-driven system implements the following workflow:
+
+1. **Order Creation** → Publishes `OrderCreatedEvent`
+2. **Order Processing** → Consumer processes payment (simulated with 5-second delay)
+3. **Payment Result** → 50% success rate:
+   - Success → Order status: COMPLETED → Publishes `OrderCompletedEvent`
+   - Failure → Order remains in PROCESSING
+4. **Order Expiration** → Scheduled job expires PROCESSING orders older than 10 minutes → Publishes `OrderExpiredEvent`
+5. **Notifications** → Separate consumer handles COMPLETED and EXPIRED events → Stores notifications in database
+
+### Kafka Components
+
+#### Topics
+- **`order-events`**: Single topic for all order-related events (OrderCreated, OrderCompleted, OrderExpired)
+
+#### Event Types
+
+**OrderCreatedEvent**
+```json
+{
+  "orderId": 1,
+  "userId": 1,
+  "total": 1299.99,
+  "timestamp": "2025-11-23T10:30:00"
+}
+```
+
+**OrderCompletedEvent**
+```json
+{
+  "orderId": 1,
+  "timestamp": "2025-11-23T10:30:05"
+}
+```
+
+**OrderExpiredEvent**
+```json
+{
+  "orderId": 2,
+  "timestamp": "2025-11-23T10:40:00"
+}
+```
+
+#### Producers
+- **OrderEventPublisher**: Publishes events to `order-events` topic
+  - `publishOrderCreated()` - When order is created via POST /api/orders
+  - `publishOrderCompleted()` - When payment succeeds
+  - `publishOrderExpired()` - When order expires
+
+#### Consumers
+- **OrderEventConsumer** (Group: `order-processor-group`)
+  - Listens for `OrderCreatedEvent`
+  - Updates order status: PENDING → PROCESSING
+  - Simulates payment processing (5-second delay)
+  - 50% success rate → COMPLETED or remains PROCESSING
+
+- **NotificationService** (Group: `notification-service-group`)
+  - Listens for `OrderCompletedEvent` and `OrderExpiredEvent`
+  - Logs email notifications to console
+  - Persists notifications to database
+
+#### Scheduled Jobs
+- **OrderExpirationScheduler**: Runs every 60 seconds
+  - Finds PROCESSING orders older than 10 minutes
+  - Updates status to EXPIRED
+  - Publishes `OrderExpiredEvent`
+
+### Order Status Flow
+
+```
+PENDING → PROCESSING → COMPLETED (50% success)
+              ↓
+           EXPIRED (if > 10 minutes in PROCESSING)
+```
+
+### Notifications Database
+
+All order events (COMPLETED and EXPIRED) are persisted in the `notifications` table:
+
+```sql
+CREATE TABLE notifications (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    order_id BIGINT NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    message VARCHAR(500) NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
+```
+
+### Running with Kafka
+
+#### Using Docker Compose (Recommended)
+
+The project includes a `docker-compose.yml` file that runs Kafka, Zookeeper, PostgreSQL, and the application:
+
+```bash
+# Start all services (Kafka, Zookeeper, PostgreSQL, App)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
+
+# Stop all services
+docker-compose down
+```
+
+Services:
+- **Zookeeper**: `localhost:2181`
+- **Kafka**: `localhost:29092` (external) / `kafka:9092` (internal)
+- **PostgreSQL**: `localhost:5431`
+- **Application**: `localhost:8080`
+
+#### Running Locally (Development)
+
+If running the Spring Boot app locally, start Kafka and Zookeeper via Docker:
+
+```bash
+# Start only Kafka and Zookeeper
+docker-compose up -d zookeeper kafka
+
+# Run the Spring Boot application
+mvn spring-boot:run
+```
+
+### Testing the Event-Driven Flow
+
+1. **Create an order** (triggers OrderCreatedEvent):
+```bash
+curl -X POST http://localhost:8080/api/orders \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userId": 1,
+    "total": 1299.99,
+    "status": "PENDING",
+    "items": [{"productId": 1, "quantity": 1, "price": 1299.99}]
+  }'
+```
+
+2. **Monitor logs** to see:
+   - OrderCreatedEvent published
+   - Order status updated to PROCESSING
+   - Payment simulation (5 seconds)
+   - 50% chance: OrderCompletedEvent + notification
+   - 50% chance: Order remains PROCESSING (will expire in 10 minutes)
+
+3. **Check notifications**:
+```bash
+curl -X GET http://localhost:8080/api/notifications \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### Kafka Integration Tests
+
+The project includes comprehensive integration tests that verify the entire event-driven flow:
+
+- `KafkaOrderEventIntegrationTest.java`:
+  - Tests OrderCreatedEvent publishing
+  - Verifies order status transitions (PENDING → PROCESSING)
+  - Tests OrderCompletedEvent publishing
+  - Verifies notification creation
+  - Tests order expiration and OrderExpiredEvent publishing
+
+Run tests:
+```bash
+mvn test
+```
+
+### Kafka Configuration
+
+**Producer Configuration**:
+- Key Serializer: `StringSerializer`
+- Value Serializer: `JsonSerializer` (automatic JSON conversion)
+
+**Consumer Configuration**:
+- Key Deserializer: `StringDeserializer`
+- Value Deserializer: `ErrorHandlingDeserializer` with `JsonDeserializer`
+- Auto Offset Reset: `earliest` (start from beginning if no offset)
+- Consumer Groups: Separate groups for order processing and notifications
+
+### Benefits of Event-Driven Architecture
+
+1. **Decoupling**: Order creation is independent of payment processing
+2. **Scalability**: Multiple consumers can process events in parallel
+3. **Reliability**: Kafka ensures message delivery and enables replay
+4. **Audit Trail**: Complete event history in Kafka logs
+5. **Asynchronous**: Non-blocking order creation improves API response times
+6. **Resilience**: Failed processing can be retried, expired orders are automatically handled
 
 ## Production Deployment
 
