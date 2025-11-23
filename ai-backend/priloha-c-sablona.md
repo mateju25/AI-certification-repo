@@ -14,9 +14,8 @@
 
 Vyplň približný čas strávený s každým nástrojom:
 
-- [x] **Claude Code:** 3 hodín  
-- [x] **GitHub Copilot:** _____ hodín
-- [x] **Claude.ai:** _____ hodín
+- [x] **Claude Code:** 6 hodín  
+- [x] **GitHub Copilot:** 0.2 hodín
 
 **Celkový čas vývoja (priližne):** _____ hodín
 
@@ -276,7 +275,7 @@ Použil som vbudovaný nástroj GitHub Copilot v VSCode na vygenerovanie commit 
 
 ### Prompt #10:
 
-**Nástroj:** Github copilot
+**Nástroj:** Claude code
 
 **Kontext:** Priprava na PRP
 
@@ -293,19 +292,178 @@ Použil som vbudovaný nástroj GitHub Copilot v VSCode na vygenerovanie commit 
 
 ### Prompt #11:
 
-**Nástroj:** Github copilot
+**Nástroj:** Claude code
 
-**Kontext:** 
+**Kontext:** Generate prp for feature
 
 **Prompt:**
 ```
+/generate-prp INITIAL.md
 
+## FEATURE:
+
+Use some messaging service Kafka. Update docker compose file so this service can be created inside docker.
+Add event bus into the project so the messages/events can be sent/published.
+
+Order creation handling:
+ - When the order is created the OrderCreated event has to be published
+ - There will be handling of this event which:
+   - Update order status: pending → processing
+   - Simulate payment processing (5 second delay)
+   - Update order status for 50% of cases to completed and publish OrderCompleted event
+   - In another 50% of cases do not change the status
+   
+Order expiration handling:
+   - Add recursive job which will run every 60 seconds
+   - The job find orders with status='processing' older than 10 minutes and update the status to
+   'expired'
+   - Publish OrderExpired event
+
+Notifications handling:
+   - Create new notifications table and add upgrade script/code
+   - When the OrderCompleted event is published
+     - Send email notification (fake/mock - log to console)
+     - Save notification to database (audit trail)
+   - When the OrderExpired event is published
+     - Save notification to database (audit trail)
+     - 
+## EXAMPLES:
+
+Expected Flow:
+1. User creates order via POST /api/orders
+2. Order saved to DB with status='pending'
+3. OrderCreated event published
+4. OrderProcessor handles event asynchronously:
+   Updates status to 'processing'
+   Simulates payment (5 sec delay)
+   Updates status to 'completed'
+5. OrderCompleted event published
+6. Notifier handles event:
+   Logs fake email to console
+   Saves notification to DB
+7. CRON job runs every 60s:
+   Finds pending orders older than 10 minutes
+   Updates them to 'expired
+
+## DOCUMENTATION:
+
+https://kafka.apache.org/
+Properly read README.md, CLUADE.md and API_DOCUMENTATION.md
+
+## OTHER CONSIDERATIONS:
+
+- Use existing project patterns for database access, error handling, logging, etc.
+- Create some new file for tests which will test this new features with kafka, at least 4 test
+```
+
+**Výsledok:**
+✅ Fungoval perfektne (first try)
+
+**Úpravy:**
+8.5/10 - scoring, ale iba pre nejake testy znizene score bolo, za mna ok. Aj vysledny md subor bol velmi kvalitny.
+
+**Poznámky:**
+
+---
+
+### Prompt #11:
+
+**Nástroj:** Claude code
+
+**Kontext:** Execute prp for feature
+
+**Prompt:**
+```
+/execute-prp PRPs/kafka-integration.md
+```
+
+**Výsledok:**
+⭐⭐⭐⭐ Dobré, potreboval malé úpravy
+
+**Úpravy:**
+
+Implementacia bola dobra ale testy nefungovali tak idem skumat dalej. Viem ze k druhej casti netreba testy.
+
+**Poznámky:**
+
+---
+
+### Prompt #12:
+
+**Nástroj:** Claude code
+
+**Kontext:** Tests not working
+
+**Prompt:**
+```
+no stop testing, and build docker compose, there are some errors fix them and
+      when docker compose is running then you can try tests
 ```
 
 **Výsledok:**
 
+❌ Nefungoval, musel som celé prepísať
+
+**Úpravy:**
+
+Nedokazal opravit preco testy nejdu.
+
+**Poznámky:**
+
+Zistil som ze zookeeper nejde spustit, tak som to riesil samostatne v dalsom prompte.
+
 ---
 
+### Prompt #13:
+
+**Nástroj:** Github copilot
+
+**Kontext:** Zookeper issue
+
+**Prompt:**
+```
+when i try to open zookepper it gives me this error: ecommerce-zookeeper  | java.io.IOException: Len error. A message from /172.22.0.1:48302 with advertised length of 1195725856 is either a malformed message or too large to process (length is greater than jute.maxbuffer=1048575)
+```
+
+**Výsledok:**
+
+❌ Nefungoval, musel som celé prepísať
+
+**Úpravy:**
+
+Spravil nejaky novy parameter, chyba nezmizla.
+
+**Poznámky:**
+
+Skusil som github copilota.
+
+---
+
+
+### Prompt #14:
+
+**Nástroj:** Github copilot
+
+**Kontext:** Zookeper issue
+
+**Prompt:**
+```
+when i try to open zookepper it gives me this error: ecommerce-zookeeper  | java.io.IOException: Len error. A message from /172.22.0.1:48302 with advertised length of 1195725856 is either a malformed message or too large to process (length is greater than jute.maxbuffer=1048575)
+```
+
+**Výsledok:**
+
+❌ Nefungoval, musel som celé prepísať
+
+**Úpravy:**
+
+Spravil nejaky novy parameter, chyba nezmizla.
+
+**Poznámky:**
+
+Skusil som github copilota.
+
+---
 ## 3. Problémy a Riešenia 
 
 > 💡 **Tip:** Problémy sú cenné! Ukazujú ako riešiš problémy s AI.
